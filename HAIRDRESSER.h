@@ -11,53 +11,52 @@ using namespace std;
 class customer { // Пункт 1 // Пункт 13
 private: // Пункт 2 // Пункт 13
 	string name;
-	int phone;
+	long long phone;
 	int membershipId;
 	int spent;
 	int membershipPoints;
+	static int totalCustomers;	// Пункт (2)4
 public:
 	string id;
 	bool membership;
 	bool elder;
 
 	// Пункт 4 // Пункт 13
+	static int getTotalCustomers();	// Пункт (2)4
+		
+	customer();	// Пункт (2) 1
 
-	void creatingCustomer(string name, double phone, int membershipId, string id, bool membership, bool elder) {
-	}
+	customer(string name, long long phone, int membershipId, string id, bool membership, bool elder);	// Пункт (2)1
 
-	void updatePhonenumber(int newPhone) {
-	}
-	void addSpent(int amount, bool elder) {
-	}
+	customer(const customer& other);	// Пункт (2)1
 
-	void addSpent(int amount, bool elder, bool usingPoints) {
-	}
+	void updatePhonenumber(int newPhone);
+	void addSpent(int amount, bool elder);
 
-	void eldereligible(int age) {
-	}
+	void addSpent(int amount, bool elder, bool usingPoints);
 
-	void merge(customer dublicate) {
-	}
+	void eldereligible(int age);
 
-	customer referalLink(string name, string id, double phone) {
-	}
+	void merge(customer dublicate);
+
+	customer referalLink(string name, string id, double phone);
 
 	// Пункт 5 // Пункт 13
 
-	void loadInFile() {
-	}
+	void loadInFile();
 
-	void loadFromFile() {
-	}
+	void loadFromFile();
 
-	void randomPurchases() { // Пункт 12 // Пункт 13
-	}
+	void randomPurchases(); // Пункт 12 // Пункт 13
+	
+
+	~customer();	// Пункт (2)3
 };
 
 class hairDresser { // Пункт 1 // Пункт 13
 private: // Пункт 2 // Пункт 13
 	string employeeId;
-	customer currentClient; // Пункт 3 // Пункт 13
+	customer currentClient; // Пункт 3 // Пункт 13 // Пункт (2) 13
 	int exp;
 	int hourRate;
 	bool canColor;
@@ -68,34 +67,45 @@ public:
 
 	// Пункт 4 // Пункт 13
 
-	void creatingHD(string id, int exp, int hourRate, bool canColor, string name, int workstation) {
-	}
+	void creatingHD(string id, int exp, int hourRate, bool canColor, string name, int workstation);
 
-	void printSchedule() {
-	}
+	void printSchedule();
 
-	void assignClient(customer client) {
-	}
+	void assignClient(customer client);
 
-	double calculateCost(int hours) {
-	}
+	double calculateCost(int hours);
 
-	double calculateCost(int hours, int productFee) {
-	}
+	double calculateCost(int hours, int productFee);
 
-	int experience() {
-	}
+	int experience();
 
-	void experience(int change) {
-	}
+	void experience(int change);
 
-	customer finalTouches(customer hotNReady)
-	{
-	}
+	customer finalTouches(customer hotNReady);
 
-	void loadInFile() {
-	}
+	void loadInFile();
 
-	void loadFromFile() {
-	}
+	void loadFromFile();
+
+	~hairDresser();	// Пункт (2)3
 };
+
+// Пункт (2) 12 ->
+
+class Barbershop {
+public:
+	hairDresser* staff[5];
+	int numStaff;
+
+	Barbershop() : numStaff(0) {
+		for (int i = 0; i < 5; ++i) {
+			staff[i] = nullptr;
+		}
+	}
+
+	void hireHairdresser(hairDresser* hd_pointer);
+
+	void showStaff();
+};
+
+//  <- Пункт (2) 12

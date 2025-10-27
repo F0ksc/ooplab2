@@ -6,13 +6,25 @@
 
 using namespace std;
 
+void recalculation(customer c, int hours) {	// Пункт (2)5
+	cout << "Using copy of customer with ID: " << c.id << endl;
+	c.addSpent(hours * 50, c.elder);
+}
+
+void recalculation(customer* c, int hours) {	// Пункт (2)6
+	cout << "Using address of customer with ID: " << c->id << endl;
+	c->addSpent(hours * 50, c->elder);
+}
+
 int main()
 {
+	Barbershop shop; // Пункт (2) 12
+
 	customer client1, client2, client3, client4, client5; // Пункт 6 // Пункт 13
 	
 	// Пункт 6 // Пункт 13
 
-	customer* dynamicClient1 = new customer(); 
+	customer* dynamicClient1 = new customer(); // Пункт (2) 9
 	customer* dynamicClient2 = new customer();
 	customer* dynamicClient3 = new customer();
 	customer* dynamicClient4 = new customer();
@@ -32,22 +44,26 @@ int main()
 
 	hairDresser hd1; 
 	hd1.creatingHD("HD001", 5, 50, true, "Alice", 1);
-	client1.creatingCustomer("Bob", 1234567890, 1001, "C001", true, false);
-	client2.creatingCustomer("Bob", 1234567890, 1001, "C001", true, false);
 
-	customer* pclient = &client1;
+	customer* pclient = &client1; // Пункт (2)9
+
+	customer* dClient1 = new customer(); 	// Пункт (2)1 8
+	customer* dClient2 = new customer("Eve", 1122334455, 1002, "C003", true, false);	// Пункт (2)1 8
+	customer* dClient3 = new customer(*dClient2);	// Пункт (2)1 8
+
+	cout << "Amount of customers done " <<customer::getTotalCustomers() << endl; // Пункт (2)4
 
 	client1.merge(client2);
 
 	client1.eldereligible(65);
 	pclient->updatePhonenumber(880055535); // Пункт 11 // Пункт 13
 
-	client1.referalLink("Charlie", "C002", 9876543210);
+	client1.referalLink("Charlie", "C002", 9876543210); // Пункт (2) 7
 
 	hd1.printSchedule();
 
 	// Пункт 10 -> // Пункт 13
-	hd1.assignClient(client1);
+	hd1.assignClient(client1); // Пункт (2) 11 // Пункт (2) 13
 	cout << "Hairdresser " << hd1.name << " is assigned to client with ID: " << client1.id << endl;
 	
 	hd1.experience(4);
@@ -63,19 +79,27 @@ int main()
 		client1.addSpent(hd1.calculateCost(2), client1.elder);
 	}
 
+	recalculation(client1, 2); // Пункт (2)5
+	recalculation(&client1, 2); // Пункт (2)6
+
+	shop.hireHairdresser(&hd1); // Пункт (2) 12
+
 	hd1.loadInFile();
 	client1.loadInFile();
 
-	customer finishedClient = hd1.finalTouches(client1);
+	customer finishedClient = hd1.finalTouches(client1); // Пункт (2) 7
 	cout << "Client with ID: " << finishedClient.id << " has completed their appointment." << endl;
 
 	client1.randomPurchases(); // Пункт 12 // Пункт 13
 
 	// <- Пункт 9 // Пункт 13
 
-	delete dynamicClient1;
-	delete dynamicClient2;
-	delete dynamicClient3;
-	delete dynamicClient4;
-	delete dynamicClient5;
+	delete dClient1;	// Пункт (2)3
+	delete dClient2;	// Пункт (2)3
+	delete dClient3;	// Пункт (2)3
+	delete dynamicClient1;	// Пункт (2)3
+	delete dynamicClient2;	// Пункт (2)3
+	delete dynamicClient3;	// Пункт (2)3
+	delete dynamicClient4;	// Пункт (2)3
+	delete dynamicClient5;	// Пункт (2)3
 }

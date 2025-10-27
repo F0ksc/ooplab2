@@ -10,16 +10,47 @@
 using namespace std;
 
 	// Пункт 4 // Пункт 13
+int customer::totalCustomers = 0;
 
-	void customer::creatingCustomer(string name, double phone, int membershipId, string id, bool membership, bool elder) {
-		this->name = name;
-		this->phone = phone;
-		this->membershipId = membershipId;
+	int customer::getTotalCustomers() {	// Пункт (2)4
+		return totalCustomers;
+	}
+
+	customer::customer() {	// Пункт (2)1
+		name = "Unnamed";
+		phone = 0;
+		membershipId = 0;
 		spent = 0;
 		membershipPoints = 0;
-		this->id = id;
-		this->membership = membership;
-		this->elder = elder;
+		id = "NONE";
+		membership = false;
+		elder = false;
+		totalCustomers++;
+	}
+
+	customer::customer(string name, long long phone, int membershipId, string id, bool membership, bool elder)	// Пункт (2)1
+		: name(name),
+		phone(phone),
+		membershipId(membershipId),
+		id(id),
+		membership(membership),
+		elder(elder)
+	{
+		spent = 0;
+		membershipPoints = 0;
+		totalCustomers++;
+	}
+
+	customer::customer(const customer& other) {	// Пункт (2)1
+		name = other.name;
+		phone = other.phone;
+		membershipId = other.membershipId;
+		spent = other.spent;
+		membershipPoints = other.membershipPoints;
+		id = other.id;
+		membership = other.membership;
+		elder = other.elder;
+		totalCustomers++;
 	}
 
 	void customer::updatePhonenumber(int newPhone) {
@@ -52,6 +83,7 @@ using namespace std;
 		newCustomer.phone = phone;
 		newCustomer.membership = true;
 		newCustomer.membershipPoints = 200;
+		totalCustomers++;
 		return newCustomer;
 	}
 
@@ -104,7 +136,7 @@ using namespace std;
 		cout << "Schedule: " << "10:00 - 17:00" << endl;
 	}
 
-	void hairDresser::assignClient(customer client) {
+	void hairDresser::assignClient(customer client) { // Пункт (2) 13
 		currentClient = client;
 	}
 
@@ -141,4 +173,27 @@ using namespace std;
 		ifstream txt("hairDresserinfo.txt");
 		txt >> employeeId >> name >> workstation >> exp >> hourRate >> canColor >> available;
 		txt.close();
+	}
+
+	customer::~customer() {	// Пункт (2) 3 
+		cout << "Customer " << name << " with ID " << id << " is deleted." << endl;
+		totalCustomers--;
+	}
+
+	hairDresser::~hairDresser() {	// Пункт (2) 3
+		cout << "Hairdresser " << name << " with Employee ID " << employeeId << " is deleted." << endl;
+	}
+
+	void Barbershop::showStaff() {
+		cout << "  Personnel  " << endl;
+		for (int i = 0; i < numStaff; ++i) {
+			cout << " - " << staff[i]->name << endl;
+		}
+	}
+
+	void Barbershop::hireHairdresser(hairDresser* hd_pointer) {
+		if (numStaff < 5) {
+			staff[numStaff] = hd_pointer;
+			numStaff++;
+		}
 	}
