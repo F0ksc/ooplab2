@@ -1,24 +1,18 @@
 // Пункт 15 // Пункт 13
 
-#include <iostream>
-#include <fstream>
-#include <ctime>
-#include <cstdlib>
-#include <algorithm>
 #include "HAIRDRESSER.h"
 
 using namespace std;
 
 	// Пункт 4 // Пункт 13
-int customer::totalCustomers = 0;
+
+	int customer::totalCustomers = 0;
 
 	int customer::getTotalCustomers() {	// Пункт (2)4
 		return totalCustomers;
 	}
 
-	customer::customer() {	// Пункт (2)1
-		name = "Unnamed";
-		phone = 0;
+	customer::customer() : Person() {	// Пункт (2)1
 		membershipId = 0;
 		spent = 0;
 		membershipPoints = 0;
@@ -28,22 +22,39 @@ int customer::totalCustomers = 0;
 		totalCustomers++;
 	}
 
-	customer::customer(string name, long long phone, int membershipId, string id, bool membership, bool elder)	// Пункт (2)1
-		: name(name),
-		phone(phone),
-		membershipId(membershipId),
-		id(id),
-		membership(membership),
-		elder(elder)
+	customer::customer(string name, long long phone, int membershipId, string id, bool membership, bool elder)	// Пункт (2)1 // (3)Пункт 5
+		: Person(name, phone) 
 	{
+		this->membershipId = membershipId;
+		this->id = id;
+		this->membership = membership;
+		this->elder = elder;
 		spent = 0;
 		membershipPoints = 0;
 		totalCustomers++;
+
+		cout << "Customer " << this->name << " created" << endl; // (3)Пункт 7
 	}
 
-	customer::customer(const customer& other) {	// Пункт (2)1
-		name = other.name;
-		phone = other.phone;
+	void customer::printDetails() {
+		cout << "Customer Details: " << endl;
+		cout << "Name: " << name << endl;
+		cout << "Phone: " << phone << endl;
+		cout << "Membership ID: " << membershipId << endl;
+		cout << "Spent: " << spent << endl;
+		cout << "Membership Points: " << membershipPoints << endl;
+		cout << "Customer ID: " << id << endl;
+		cout << "Membership: " << (membership ? "Yes" : "No") << endl;
+		cout << "Elder: " << (elder ? "Yes" : "No") << endl;
+	}
+
+	std::string customer::getId() const {
+		return id;
+	}
+
+	customer::customer(const customer& other)
+		: Person(other)
+	{	// Пункт (2)1
 		membershipId = other.membershipId;
 		spent = other.spent;
 		membershipPoints = other.membershipPoints;
@@ -56,12 +67,12 @@ int customer::totalCustomers = 0;
 	void customer::updatePhonenumber(int newPhone) {
 		phone = newPhone;
 	}
-	void customer::addSpent(int amount, bool elder) {
+	void customer::addSpent(double amount, bool elder) {
 		spent += amount / 3;
 		membershipPoints += amount / 20;
 	}
 
-	void customer::addSpent(int amount, bool elder, bool usingPoints) {
+	void customer::addSpent(double amount, bool elder, bool usingPoints) {
 		membershipPoints -= amount / 3;
 	}
 
@@ -76,12 +87,8 @@ int customer::totalCustomers = 0;
 		membershipPoints += dublicate.membershipPoints;
 	}
 
-	customer customer::referalLink(string name, string id, double phone) {
-		customer newCustomer;
-		newCustomer.name = name;
-		newCustomer.id = id;
-		newCustomer.phone = phone;
-		newCustomer.membership = true;
+	customer customer::referalLink(std::string name, long long phone, std::string id) {
+		customer newCustomer(name,phone,0,id,true,false);
 		newCustomer.membershipPoints = 200;
 		totalCustomers++;
 		return newCustomer;
@@ -91,7 +98,7 @@ int customer::totalCustomers = 0;
 
 	void customer::loadInFile() {
 		ofstream txt("customerinfo.txt");
-		txt << name << " " << phone << " " << membershipId << " " << spent << " " << membershipPoints << " " << id << " " << membership << " " << elder << endl;
+		txt << this->name << " " << phone << " " << membershipId << " " << spent << " " << membershipPoints << " " << id << " " << membership << " " << elder << endl;
 		txt.close();
 	}
 
@@ -122,12 +129,12 @@ int customer::totalCustomers = 0;
 
 	// Пункт 4 // Пункт 13
 
-	void hairDresser::creatingHD(string id, int exp, int hourRate, bool canColor, string name, int workstation) {
+	hairDresser::hairDresser(string name, long long phone, string id, int exp, int hourRate, bool canColor, int workstation)
+	{
 		employeeId = id;
 		exp = exp;
 		this->hourRate = hourRate;
 		this->canColor = canColor;
-		this->name = name;
 		this->workstation = workstation;
 		available = true;
 	}
@@ -165,29 +172,29 @@ int customer::totalCustomers = 0;
 
 	void hairDresser::loadInFile() {
 		ofstream txt("hairDresserinfo.txt");
-		txt << employeeId << " " << name << " " << workstation << " " << exp << " " << hourRate << " " << canColor << " " << available << endl;
+		txt << employeeId << " " << this->name << " " << workstation << " " << exp << " " << hourRate << " " << canColor << " " << available << endl;
 		txt.close();
 	}
 
 	void hairDresser::loadFromFile() {
 		ifstream txt("hairDresserinfo.txt");
-		txt >> employeeId >> name >> workstation >> exp >> hourRate >> canColor >> available;
+		txt >> employeeId >> this->name >> workstation >> exp >> hourRate >> canColor >> available;
 		txt.close();
 	}
 
-	customer::~customer() {	// Пункт (2) 3 
-		cout << "Customer " << name << " with ID " << id << " is deleted." << endl;
+	customer::~customer() {	// Пункт (2) 3  // (3)Пункт 7 
+		cout << "Customer " << this->name << " with ID " << id << " is deleted." << endl;
 		totalCustomers--;
 	}
 
 	hairDresser::~hairDresser() {	// Пункт (2) 3
-		cout << "Hairdresser " << name << " with Employee ID " << employeeId << " is deleted." << endl;
+		cout << "Hairdresser " << this->name << " with Employee ID " << employeeId << " is deleted." << endl;
 	}
 
-	void Barbershop::showStaff() {
+	void Barbershop::showStaff(){
 		cout << "  Personnel  " << endl;
 		for (int i = 0; i < numStaff; ++i) {
-			cout << " - " << staff[i]->name << endl;
+			cout << " - " << staff[i] << endl;
 		}
 	}
 
@@ -196,4 +203,20 @@ int customer::totalCustomers = 0;
 			staff[numStaff] = hd_pointer;
 			numStaff++;
 		}
+	}
+
+	ClientRecord::ClientRecord(std::string name, long long phone, int mID, std::string id) // (3)Пункт 3
+		: customer(name, phone, mID, id, false, false)
+	{
+		cout << "ClientRecord: Created" << endl;
+	}
+
+	void Accountant::calculateSalary() {
+		cout << "Calculating salary..." << endl;
+	}
+
+	Manager::Manager(std::string name, long long phone, std::string empId, int hourRate)
+		: hairDresser(name, phone, empId, 0, hourRate, true, 0)
+	{
+		cout << "Manager: created" << endl;
 	}
